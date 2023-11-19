@@ -24,15 +24,15 @@ resource "azurerm_storage_container" "uksamrstr02cont01" {
    ]
 }
 
-resource "azurerm_storage_blob" "Files" {
+resource "azurerm_storage_blob" "files" {
   for_each = {
-    File1 = "C:\\temp\\file1.txt"
-    File2 = "C:\\temp\\file1.txt"
-    File3 = "C:\\temp\\file1.txt"
+    file1 = "C:\\temp\\file1.txt"
+    file2 = "C:\\temp\\file2.txt"
+    file3 = "C:\\temp\\file3.txt"
   }
   name                   = "${each.key}.txt"
   storage_account_name   = "uksamrstr03"
-  storage_container_name = "uksamrstr03cont01"
+  storage_container_name = "files"
   type                   = "Block"
   source                 = each.value
   depends_on = [
