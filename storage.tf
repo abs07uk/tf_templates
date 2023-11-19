@@ -15,7 +15,7 @@ resource "azurerm_storage_account" "uksstr" {
   }
 
 resource "azurerm_storage_container" "uksamrstr02cont01" {
-  for_each = toset(["Files","Data","Documents"])
+  for_each = toset(["files","data","documents"])
   name = each.key
   storage_account_name = "uksamrstr03"
   container_access_type = "blob"
