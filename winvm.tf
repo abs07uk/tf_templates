@@ -2,7 +2,7 @@ data "azurerm_subnet" "snetb" {
   name = "uksamrvnet01snet01"
   virtual_network_name = "uksamrvnet01"
   resource_group_name = "tf-rg"
-  depends_on = [ azurerm_virtual_network.vnet01 ]
+  depends_on = [ azurerm_subnet.subnets ]
 }
 # add a subnet as a seperate resource 
 resource "azurerm_subnet" "snetc" {

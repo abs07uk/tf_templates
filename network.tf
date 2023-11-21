@@ -29,28 +29,25 @@ resource "azurerm_virtual_network" "vnet01" {
     location            = local.location
     resource_group_name = local.resource_group_name
     address_space       = [local.virtual_network.address_space]
-    subnet {
-        name            = local.subnets[0].name
-        address_prefix  = local.subnets[0].address_prefix
-    }
-    subnet {
-        name            = local.subnets[1].name
-        address_prefix  = local.subnets[1].address_prefix
-    }
-
-    tags = {
-      env = "tfenv"
-    }
-    depends_on = [ 
-        azurerm_resource_group.tfrg
+    depends_on = [
+      azurerm_resource_group.tfrg
      ]
-    }
+}  
+resource "azurerm_subnet" "subnets" {
+  count = var.number_of_subnets
+  name = local.subnets[count.index].name
+  resource_group_name = local.resource_group_name
+  virtual_network_name = local.virtual_network.name
+  address_prefixes = [local.subnets[count.index].address_prefix]
+  depends_on = [ 
+    azurerm_virtual_network.vnet01
+  ]
+ }
 
 resource "azurerm_network_security_group" "nsg-1" {
   name                = "ukamrnsg01"
   location            = local.location
   resource_group_name = local.resource_group_name
-
   security_rule {
     name                       = "allow-rdp"
     priority                   = 1000
@@ -63,9 +60,7 @@ resource "azurerm_network_security_group" "nsg-1" {
     destination_address_prefix = "*"
   }
 depends_on = [ azurerm_resource_group.tfrg ]
-
 }
-
 resource "azurerm_subnet_network_security_group_association" "nsglink" {
   subnet_id                 = data.azurerm_subnet.snetb.id
   network_security_group_id = azurerm_network_security_group.nsg-1.id
